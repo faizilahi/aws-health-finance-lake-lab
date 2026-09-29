@@ -1,0 +1,88 @@
+{
+  "databases": [
+    {
+      "Name": "hf_raw"
+    },
+    {
+      "Name": "hf_curated"
+    }
+  ],
+  "tables": [
+    {
+      "DatabaseName": "hf_raw",
+      "Name": "claims",
+      "TableType": "EXTERNAL_TABLE",
+      "StorageDescriptor": {
+        "Columns": [
+          {
+            "Name": "claim_line_id",
+            "Type": "string"
+          },
+          {
+            "Name": "payer",
+            "Type": "string"
+          },
+          {
+            "Name": "allowed_amount",
+            "Type": "double"
+          },
+          {
+            "Name": "member_token",
+            "Type": "string"
+          }
+        ],
+        "Location": "s3://hf-open-lake-prod/raw/claims/",
+        "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+        "SerdeInfo": {
+          "SerializationLibrary": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
+        }
+      },
+      "PartitionKeys": [
+        {
+          "Name": "service_date",
+          "Type": "date"
+        }
+      ]
+    },
+    {
+      "DatabaseName": "hf_curated",
+      "Name": "claims_fact",
+      "TableType": "EXTERNAL_TABLE",
+      "StorageDescriptor": {
+        "Columns": [
+          {
+            "Name": "claim_line_id",
+            "Type": "string"
+          },
+          {
+            "Name": "payer",
+            "Type": "string"
+          },
+          {
+            "Name": "allowed_amount",
+            "Type": "double"
+          },
+          {
+            "Name": "paid_amount",
+            "Type": "double"
+          },
+          {
+            "Name": "member_token",
+            "Type": "string"
+          }
+        ],
+        "Location": "s3://hf-open-lake-prod/curated/iceberg_style/claims_fact/",
+        "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+        "SerdeInfo": {
+          "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+        }
+      },
+      "PartitionKeys": [
+        {
+          "Name": "service_date",
+          "Type": "date"
+        }
+      ]
+    }
+  ]
+}
